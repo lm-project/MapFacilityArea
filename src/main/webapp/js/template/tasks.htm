@@ -1,0 +1,38 @@
+<table class="tablesorter" cellspacing="0">
+		<thead>
+			<tr>
+				<th><input type="button" value="全选" id="task_selectall"><input
+					type="button" value="删除" class="alt_btn" id="task_delall"></th>
+				<th style="width: 110px">任务名称</th>
+				<th style="width: 200px">任务描述</th>
+				<!-- <th style="width: 268px">项目上传任务清单</th> -->
+				<th>创建时间</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+		{{#each items}}
+		<tr>
+			<td><input type='checkbox' value={{id}}></td>
+			<td>{{name}}</td>
+			<td>{{remark}}</td>
+			<!-- <td>{{filename}}</td> -->
+			<td>{{createtime}}</td>
+
+			<td><input type='image'
+				src='{{../path}}/images/admin/icn_edit.png' id='task_edit'
+				title='查看子任务' value='{{aid}}'>
+				<input type='image' src='{{../path}}/images/admin/icn_trash.png'
+				id='task_recycle' title='回收'></td>
+		</tr>
+		{{/each}}
+</table>
+<div id="loadmorepage" class="loadmorepage">
+	<span class='left'>总记录数：{{totalNum}}</span> {{{paging}}}
+</div>
+<div>
+	<input type="button" id="exportShpByTask" value="导出shape文件" class="alt_btn" style="margin-left:3px; display: none;" onclick="exportByTask()">
+	<span class='mg'></span>
+</div>
+	

@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>设施区域在线制作平台-作业任务管理</title>
+	<#assign ctx=(rc.getContextPath())!''>
+	<link rel="shortcut icon" type="image/x-icon" href="${ctx}/images/favicon.ico"/>
+	<link rel="stylesheet" href="${ctx}/css/layout.css" type="text/css" media="screen" />
+	<script id="taskTemplate" type="text/x-handlebars-template" ></script>
+	<script type="text/javascript">var path = '${ctx}';</script>
+</head>
+<body>
+
+	<header id="header">
+		<hgroup>
+			<h1 class="site_title"><a href="index.html">作业任务管理</a></h1>
+			<h2 class="section_title">设施区域在线制作平台</h2><div class="btn_view_site"><a href="${ctx}/logout">退出</a></div>
+		</hgroup>
+	</header> <!-- end of header bar -->
+	
+	<section id="secondary_bar">
+		<div class="user" title="登录账户">
+			<p>${truename}</p>
+		</div>
+		<div class="breadcrumbs_container">
+				<article class="breadcrumbs">
+					<a href="${ctx}/operator">主页</a>
+					<div class="breadcrumb_divider"></div>
+					<a class="current" id="current">查询任务</a>
+				</article>
+		    </div>
+	</section><!-- end of secondary bar -->
+	
+	<aside id="sidebar" class="column">
+	
+		<h3>作业任务管理</h3>
+		<ul class="toggle">
+			<li class="icn_tags"><a onclick="change(0)" style="cursor: pointer;">查询任务</a></li>
+			<li class="icn_new_article"><a onclick="change(1)" style="cursor: pointer;">已领取任务</a></li>
+			
+		</ul>
+		<h3>用户管理</h3>
+		<ul class="toggle">
+			<li class="icn_profile"><a href="#">个人资料</a></li>
+		</ul>
+		<footer>
+			<hr />
+			<p><strong>Copyright &copy; 2014 Autonavi</strong></p>
+		</footer>
+	</aside><!-- end of sidebar -->
+	
+	<section id="main" class="column">
+		<article class="module width_full" id="article1">
+			<header><h3>查询任务</h3></header>
+			<div class="module_content">
+						<fieldset style="width:100%;float:left">
+							<div style="height:30xp;margin:13px">
+								<span style="color: #1F1F20;font-size: 13px;float:left">项目清单:</span>
+								<select style="width:202px;float:left" id='project'>
+									<option value=0>全部项目</option>
+								</select>
+							</div>
+							<div class="clear"></div>
+							<div style="height:30xp;margin:13px">
+								<span style="color: #1F1F20;font-size: 13px;float:left">任务名称:</span>
+								<input type="text" style="width:202px;float:left" id='tname'>
+								
+								<span style="color: #1F1F20;font-size: 13px;float:left">任务类型:</span>
+								<select style="width:202px;float:left" id='processtype'>
+									<option value=0>全部</option>
+									<option value="新增">新增</option>
+									<option value="主动更新">主动更新</option>
+									<option value="被动更新">被动更新</option>
+								</select>
+							</div>
+							<div class="clear"></div>
+							<div style="height:30xp;margin:13px">
+								<span style="color: #1F1F20;font-size: 13px;float:left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期:</span>
+								<input id="time1" type="text" class="Wdate" style="width:202px;float:left"  onfocus="var time2=$dp.$('time2');WdatePicker({firstDayOfWeek:1,onpicked:function(){time2.focus();},skin:'whyGreen',maxDate:'%y-%M-%d'})">
+								<span style="color: #1F1F20;font-size: 13px;float:left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								<input id="time2" type="text" class="Wdate" style="width:202px;float:left" onfocus="WdatePicker({firstDayOfWeek:1, skin:'whyGreen',maxDate:'%y-%M-%d'})">
+							</div>
+							<div class="clear"></div>
+							<div style="height:30xp;margin:13px;padding-left:20px">
+								<input type="button" value="全选" id="selectall1" style="display: block;margin-left:-10px;float: left;">
+								<input type="button" value="点击领取" class="alt_btn" style="margin-left:30px" id="receive">
+								<span>找到<font style="color:red" id='number'></font>条数据</span>
+								<input type="button" value="点击查询" class="alt_btn" style="margin-left:150px" id="query">
+							</div>
+						</fieldset><div class="clear"></div>
+				<div class="tab_container" id="tab_container1">
+					<div id="tab2" class="tab_content" style="overflow:auto;max-height :335px">
+					</div><!-- end of #tab1 -->
+				</div>
+			</div><!-- end of .tab_container -->
+		</article><!-- end of post new article1 -->
+		
+		<article class="module width_full" id="article2" style="display:none">
+		<div class="module_content">
+			<fieldset style="width:100%;float:left">
+			</fieldset><div class="clear"></div>
+			<div class="tab_container">
+				<div id="tab3" class="tab_content" style="overflow:auto;min-height:36px;max-height :400px">
+				</div><!-- end of #tab3 -->
+				<footer>
+				<div style="margin-left: 20px;padding: 5px 0;">
+					<input type="button" id="gotoEdit" value="点击开始作业" class="alt_btn" style="margin-left:3px;display:block">
+				</div>
+				</footer> 
+			</div>
+		</div>
+		</article>
+		<div class="spacer"></div>
+	</section>
+</body>
+<script src="${ctx}/js/common/jquery-1.9.1.js"></script>
+<script src="${ctx}/js/common/require.js" data-main="${ctx}/js/operator/main"></script>
+</html>

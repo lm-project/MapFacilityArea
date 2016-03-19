@@ -1,0 +1,44 @@
+@CHARSET "UTF-8";
+
+.amap-toolbar {
+	top: 50px !important;
+	left: 15px !important;
+}
+
+#searchTaskitem {
+	min-height: 30px;
+	background-color: white;
+	border: 1px solid #ccc;
+	padding: 0px 10px;
+	height: 30px;
+	width: 300px;
+	border-radius: 4px;
+	text-overflow: ellipsis;
+}
+
+#taskitem{
+	height: 463px;
+}
+
+.tag{ 
+	width:300px;
+	margin-top:23px;
+	height:26px;
+	border:5px solid #09F; 
+	position:relative;
+	background-color:#FFF;
+} 
+.tag:before,.tag:after{
+	content:"";display:block; 
+	border-width:20px; 
+	position:absolute; bottom:-40px;
+	left:100px;
+	border-style:solid dashed dashed;
+	border-color:#09F transparent transparent;
+	font-size:0; 
+	line-height:0;
+}
+.tag:after{
+	bottom:-33px;
+	border-color:#FFF transparent transparent;
+} 

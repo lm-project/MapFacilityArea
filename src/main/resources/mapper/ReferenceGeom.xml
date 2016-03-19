@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ReferenceGeom">
+	<select id="getByTypeKey" parameterType="referenceGeom" resultType="referenceGeom">
+		select id,key,type,geom,context from reference_geom
+		<where>
+			key = #{key} and type = #{type}
+		</where>
+	</select>
+
+
+	<select id="findCachedNames" parameterType="String" resultType="referenceGeom">
+		select key from reference_geom
+		<where>
+			type = #{type}
+		</where>
+	</select>
+	
+	<select id="findCachedGeoms" parameterType="String" resultType="referenceGeom">
+		select id,key,type,geom,context  from reference_geom
+		<where>
+			type = #{type} and context is not null
+		</where>
+	</select>
+	
+	
+	<insert id="insert" parameterType="referenceGeom" useGeneratedKeys="true" keyProperty="id">
+		insert into reference_geom (key,type,context
+		<if test="type != 'autonavi'">
+				,geom
+		</if>
+		) values
+		(#{key}, #{type}, #{context}
+		<if test="type != 'autonavi'">
+				,ST_GeomFromText(#{geom})
+		</if>
+		)
+	</insert>
+
+	<update id="update" parameterType="referenceGeom">
+		update reference_geom set key = #{key}, type =  #{type},context=#{context}
+		<if test="type != 'autonavi'">
+				, geom = ST_GeomFromText(#{geom})
+		</if>
+		where  id  = #{id}
+	</update>
+	
+</mapper>

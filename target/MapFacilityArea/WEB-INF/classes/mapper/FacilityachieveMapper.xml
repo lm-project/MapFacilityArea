@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="facilityachieveMapper">
+	<resultMap id="facResultMap" type="com.autonavi.mapart.entity.Facilityachieve">
+		<result property="gid" column="gid" />
+		<result property="fa" column="fa" />
+		<result property="fa_id" column="fa_id" />
+		<result property="name_chn" column="name_chn" />
+		<result property="mesh" column="mesh" />
+		<result property="poi_id" column="poi_id" />
+		<result property="fa_type" column="fa_type" />
+		<result property="disp_class" column="disp_class" />
+		<result property="fa_flag" column="fa_flag" />
+		<result property="area_flag" column="area_flag" />
+		<result property="geom" column="geom" />
+		<result property="taskitem_id" column="task_item_id" />
+		<result property="reverse_geom" column="reverse_geom" />
+		<result property="poi_guid" column="poi_guid" />
+		<result property="precision" column="precision" />
+		<result property="sources" column="sources" />
+		<result property="updatetime" column="updatetime" />
+		<result property="proname" column="proname" />
+		<result property="fatype_id" column="fatype_id" />
+	</resultMap>
+
+	<sql id="base_column">
+		gid, fa, fa_id, name_chn, mesh, poi_id, fa_type,
+		disp_class, fa_flag, area_flag, geom, reverse_geom,
+		poi_guid, precision, sources, updatetime, proname, fatype_id
+	</sql>
+
+	<sql id="export_column">
+		gid, fa, fa_id, name_chn, mesh, poi_id, fa_type,
+		disp_class, fa_flag, area_flag, reverse_geom geom,
+		poi_guid, precision,
+		sources, updatetime, proname
+	</sql>
+	<select id="getFacilityByTaskitem" parameterType="int"
+		 resultType="com.autonavi.mapart.entity.Facilityachieve">
+		select gid, fa, fa_id, name_chn, mesh, poi_id,
+		fa_type,task_item_id taskitem_id,
+		disp_class, fa_flag,
+		area_flag,ST_AsText(ST_GeometryN(geom,1)) geom, precision, sources,
+		proname, fatype_id,release,x_id,center,lng_lat,condition,area 
+		from facility_achieve where task_item_id = #{taskitemId} order by gid desc limit 1 
+	</select>
+	
+	
+	<!--入cms库时的数据库操作  -->
+	<select id="getMesh_poiId" resultType="Anf_hicaicaibian">
+		 select gid, mesh, poi_id from facility_achieve 
+		 where x_id = 0 or poi_id in(0) or mesh in('')
+	</select>
+	<update id="updateXidByGid" parameterType="Anf_hicaicaibian">
+		update facility_achieve 
+		<set>
+			x_id = #{x_id},fa_id=#{fa_id},mesh=#{mesh},poi_id=#{poi_id}
+		</set>
+		where gid = #{gid}
+	</update>
+	<select id="selectLastFa_id"  resultType="int" >
+		SELECT fa_id FROM facility_achieve ORDER BY fa_id DESC LIMIT 1 ;
+	</select>
+	<select id="selectCMS" parameterType="int" resultType="com.autonavi.mapart.entity.CmsData" >
+		select fa_id, x_id, lng_lat, condition,center from facility_achieve 
+		where x_id not in(0) and lng_lat not in('') and center not in('') and fa_id in 
+		<foreach item="item" collection="array" open="(" separator="," close=")">
+			#{item} 
+		</foreach> 
+		ORDER BY fa_id
+	</select>
+	<update id="updateReleaseByFa_id" parameterType="java.util.List">
+		update facility_achieve 
+		<set>
+			release = 1
+		</set>
+		where fa_id in 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item.fa_id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+	
+	
+	<select id="getFacilityList" parameterType="int"
+		resultType="facilityarea">
+		select task_item_id taskitem_id, ST_AsText(geom) geom
+		from facility_achieve where task_item_id in 
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="selectPolygonByBounds" parameterType="java.util.Map"
+		resultType="facilityarea">
+		select task_item_id taskitem_id, ST_AsText(ST_GeometryN(geom,1)) geom, lng_lat 
+		from facility_achieve
+		<where>
+			ST_GeometryN(geom,1) <![CDATA[&&]]>
+			ST_GeomFromText(#{bounds})
+		</where>
+	</select>
+
+	<select id="insertbefore" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select max(fa) from facility_achieve
+		<where>
+			mesh = #{mesh};
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="facilityarea"
+		useGeneratedKeys="true" keyProperty="aid">
+		insert into facility_achieve (fa,
+		fa_id, name_chn, mesh, poi_id, fa_type,
+		disp_class, fa_flag, area_flag,
+		geom,task_item_id, reverse_geom, precision, sources, updatetime,
+		proname, fatype_id,lng_lat,condition,center,x_id,release,area)
+		values (#{fa}, #{fa_id}, #{name_chn}, #{mesh}, #{poi_id}, #{fa_type},
+		#{disp_class}, #{fa_flag}, #{area_flag},
+		ST_GeomFromText(#{geom}),#{taskitem_id},
+		ST_GeomFromText(#{reverse_geom}), #{precision}, #{sources},
+		#{updatetime}, #{proname}, #{fatype_id},
+		#{lng_lat},#{condition},#{center},#{x_id},0,#{area})
+	</insert>
+
+
+	<update id="updateByTaskitemId" parameterType="facilityarea">
+		update facility_achieve
+		<set>
+		    <if test="name_chn != null">
+			name_chn=#{name_chn}, mesh=#{mesh}, poi_id=#{poi_id}, fa_type=#{fa_type},
+			disp_class=#{disp_class}, fa_flag=#{fa_flag}, area_flag=#{area_flag},
+			geom=ST_GeomFromText(#{geom}),
+			precision=#{precision}, sources=#{sources}, updatetime=#{updatetime},
+			proname=#{proname}, fatype_id=#{fatype_id},
+			lng_lat=#{lng_lat},center=#{center},x_id=#{x_id},area=#{area},condition=#{condition},
+			</if>
+			reverse_geom=ST_GeomFromText(#{reverse_geom})
+		</set>
+		where task_item_id = #{taskitem_id}
+	</update>
+	
+	<update id="updateFacilityByGid" parameterType="facilityarea">
+		update facility_achieve
+		<set>
+		    <if test="name_chn != null">
+			name_chn=#{name_chn}, mesh=#{mesh}, poi_id=#{poi_id}, fa_type=#{fa_type},
+			disp_class=#{disp_class}, fa_flag=#{fa_flag}, area_flag=#{area_flag},
+			geom=ST_GeomFromText(#{geom}),
+			precision=#{precision}, sources=#{sources}, updatetime=#{updatetime},
+			proname=#{proname}, fatype_id=#{fatype_id},fa_id=#{fa_id},
+			lng_lat=#{lng_lat},center=#{center},x_id=#{x_id},area=#{area},condition=#{condition},
+			</if>
+			reverse_geom=ST_GeomFromText(#{reverse_geom})
+		</set>
+		where gid = #{gid}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		delete from facility_achieve where task_item_id =
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<delete id="deleteGid" parameterType="int">
+		delete from facility_achieve where gid = #{gid}
+	</delete>
+	
+	<update id="createTmpTableNameById" parameterType="Map">
+		create table ${tableName} as select
+		<include refid="export_column" />
+		from facility_achieve where task_item_id in (
+		select id from task_item where task_id in
+		<foreach item="item" collection="taskids" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</update>
+
+    
+    <update id="createTmpTableNameByName" parameterType="Map" >
+       create table ${tableName} as select <include refid="export_column" /> from facility_achieve where task_item_id in (
+       select id from task_item where task_id in (select id from task where project_name = #{projectname} and task_type = 0)
+       )
+    </update >
+    
+    <update id="deleteTmpTable" parameterType="Map" >
+       drop table ${tableName}
+    </update >
+    
+    <select id="getDataCount" parameterType="Map" resultType="Integer">
+    	select count(*) from ${tableName}
+    </select>
+    
+    <select id="getAreaFlag" parameterType="String" resultType="Integer">
+    	select area_flag from hk_mc_area 
+    	where st_contains(geom, st_centroid(ST_GeomFromText(#{polygon}))) = true
+    </select>
+    
+    <update id="updateFatype" parameterType="fapoiRelation">
+    	update facility_achieve
+    	<set>
+    		fa_type = #{fa_type}
+    	</set>
+    	where fatype_id = #{id}
+    </update>
+   
+</mapper>

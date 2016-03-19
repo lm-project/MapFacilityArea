@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<#assign ctx=(rc.getContextPath())!''>
+<title>设施区域在线制作平台</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<link rel="shortcut icon" type="image/x-icon" href="${ctx}/images/favicon.ico"/>
+<link rel="stylesheet" type="text/css" href="${ctx}/css/login.css"/>
+<script type="text/javascript" src="${ctx}/js/common/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="${ctx}/js/common/jquery.cookie.js"></script>
+<script type="text/javascript" src="${ctx}/js/login/login.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?ak=QdcFHybRXLQ900qs3ZyqWW2b&v=2.0"></script>
+<script type="text/javascript" src="${ctx}/js/map/bdGeoUtils.js"></script>
+<script type="text/javascript">
+	function changeImg() { 
+        var imgSrc = $("#imgObj");  
+        var src = imgSrc.attr("src");  
+        imgSrc.attr("src", chgUrl(src));  
+    }  
+    //时间戳     
+    //为了使每次生成图片不一致，即不让浏览器读缓存，所以需要加上时间戳     
+    function chgUrl(url) {  
+        var timestamp = (new Date()).valueOf();  
+        url = url.substring(0, 17);  
+        if ((url.indexOf("&") >= 0)) {  
+            url = url + "×tamp=" + timestamp;  
+        } else {  
+            url = url + "?timestamp=" + timestamp;  
+        }  
+        return url;  
+    }  
+</script>
+</head>
+<body>
+	<div style="margin: 0 auto;width:980px;" >
+		<form action="j_spring_security_check" method="post" id="login">
+		<table  cellpadding="0" cellspacing="0" width="980">
+			<tr>
+				<td><img src="images/spacer.gif" width="671" height="1"/></td>
+				<td><img src="images/spacer.gif" width="131" height="1"/></td>
+				<td><img src="images/spacer.gif" width="67" height="1"/></td>
+				<td><img src="images/spacer.gif" width="111" height="1" /></td>
+				<td><img src="images/spacer.gif" width="1" height="1"/></td>
+			</tr>
+			<tr>
+				<td colspan="4" class="police_r1_c1"></td>
+				<td><img src="images/spacer.gif" width="1" height="200" /></td>
+			</tr>
+			<tr>
+				<td rowspan="6" class="police_r2_c1">
+					<div style="position: relative;top: -55px;left: 575px;">
+						验证码:<input id="index_code" placeholder="不区分大小写" name="code" type="text" style="width: 65px;" />
+						<img id="imgObj"  alt="验证码" src="code.html" onclick="changeImg()" title="点击获取验证码" style="cursor: pointer;top: 5px;position: relative;"/> 
+					</div>
+					<div class="checkbox1">
+						<input type="checkbox" id="ck_rmbUser"/>记住密码
+					</div>
+				</td>
+				<td colspan="2"><input type="text" class="username" id="userName" name="j_username"  outline="none" autocomplete="off"/></td>
+				<td rowspan="6" class="police_r2_c4"></td>
+			</tr>
+			<tr>
+				<td colspan="2" class="police_r3_c2"><span class="mg"><img src="images/mg.png" style="padding:2px;"/><lable id="mg"></lable></span></td>
+				<td><img src="images/spacer.gif" width="1" height="29" /></td>
+			</tr>
+			<tr>
+				<td colspan="2"><input type="password" class="password" id="password" name="j_password"/></td>
+				<td><img src="images/spacer.gif" width="1" height="22" /></td>
+			</tr>
+			<tr>
+				<td colspan="2" class="police_r5_c2"></td>
+				<td><img src="images/spacer.gif" width="1" height="22" /></td>
+			</tr>
+			<tr>
+				<td rowspan="2" class="police_r6_c2"></td>
+				<td><input type="button" class="submitButton" id="submit1" onclick="submitLoginForm()" /></td>
+				<td><img src="images/spacer.gif" width="1" height="26" /></td>
+			</tr>
+			<tr>
+				<td class="police_r7_c3"></td>
+				<td><img src="images/spacer.gif" width="1" /></td>
+			</tr>
+		</table>
+		</form>
+	</div>
+	<div id="container"></div>
+</body>
+</html>

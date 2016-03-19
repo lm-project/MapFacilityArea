@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Cms_RecordMapper">
+  <insert id="insert" parameterType="Cms_Record">
+		insert into cms_record (start,num,last_fa_id) values (#{start}, #{num},#{last_fa_id})
+	</insert>
+</mapper>

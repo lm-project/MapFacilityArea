@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="qaresultMapper">
+	<resultMap id="qaResultMap" type="com.autonavi.mapart.entity.Qaresult">
+		<result property="id" column="id" />
+		<result property="taskitem_id" column="task_item_id" />
+		<result property="qamark" column="qa_mark" />
+		<result property="remark" column="remark" />
+		<result property="reverse_qamark" column="reverse_qamark"/>
+	</resultMap>
+
+	<select id="queryDulpQa" resultType="qaresult">
+		select id,reverse_qamark from 
+		  (
+		   select ST_Distance(q.reverse_qamark,f.geom) as dis, q.id ,q.task_item_id,q.reverse_qamark 
+		   from ${qa_result} q,facility_achieve f 
+		   where 1=1 and q.task_item_id = f.task_item_id
+		  ) d order by task_item_id,dis
+	</select>
+	
+	<delete id="deleteWrongQa" parameterType="Map">
+		delete from ${qa_result} where reverse_qamark is null or TRIM(REMARK) =''
+	</delete>
+	
+	<delete id="deleteDulpQa" parameterType="Map">
+		delete from ${qa_result} where id not in
+		<foreach item="item" collection="items" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<sql id="base_column">
+		id, task_item_id, qa_mark, remark, reverse_qamark
+	</sql>
+	
+	<sql id="export_column">
+		id, task_item_id, remark, reverse_qamark
+	</sql>
+	
+	<delete id="delete" parameterType="int">
+		delete from qa_result where task_item_id = #{taskitem_id}
+	</delete>
+	
+	<insert id="insert" parameterType="qaresult" useGeneratedKeys="true" keyProperty="id">
+		insert into qa_result (task_item_id, qa_mark, remark, reverse_qamark) values
+			(
+			#{taskitem_id},ST_GeomFromText(#{qamark}),#{remark},ST_GeomFromText(#{reverse_qamark})
+			)
+	</insert>
+	
+	<select id="getQaresult" parameterType="int" resultType="qaresult">
+		select task_item_id taskitem_id, ST_AsText(ST_GeometryN(qa_mark,1)) qamark,remark from qa_result
+		<where>
+			task_item_id = #{taskitemid}
+		</where>
+	</select>
+	
+	<select id="getPolylineByBound" parameterType="java.util.Map" resultType="qaresult">
+		select task_item_id taskitem_id, ST_AsText(ST_GeometryN(qa_mark,1)) qamark,remark from qa_result
+		<where>
+			ST_GeometryN(qa_mark,1) <![CDATA[&&]]> ST_GeomFromText(#{bounds})
+		</where>
+	</select>
+	
+	<update id="createTmpTableNameByName" parameterType="Map" >
+       create table ${tableName} as select <include refid="export_column" /> from qa_result where task_item_id in (
+       select id from task_item where qa_task_id in (select id from task where project_name = #{projectname} and task_type = 1)
+       )
+    </update >
+</mapper>

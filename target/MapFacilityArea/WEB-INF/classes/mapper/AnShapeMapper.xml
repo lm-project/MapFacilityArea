@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="anShapeMapper">
+	<insert id="importAnData" parameterType="java.util.List">
+    	insert into facility_an (fa, fa_id, name_chn, mesh, poi_id, fa_type, disp_class, fa_flag,
+    	area_flag, geom, poi_guid, precision, sources, updatetime, proname, data_version) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			#{item.fa,jdbcType=INTEGER}, #{item.fa_id,jdbcType=INTEGER},
+			#{item.name_chn,jdbcType=VARCHAR}, #{item.mesh,jdbcType=VARCHAR},
+			#{item.poi_id,jdbcType=INTEGER}, #{item.fa_type,jdbcType=INTEGER},
+			#{item.disp_class,jdbcType=INTEGER}, #{item.fa_flag,jdbcType=INTEGER},
+			#{item.area_flag,jdbcType=INTEGER}, ST_GeomFromText(#{item.geom,jdbcType=VARCHAR}),
+			#{item.poi_guid,jdbcType=VARCHAR}, #{item.precision,jdbcType=VARCHAR},
+			#{item.sources,jdbcType=INTEGER}, #{item.updatetime,jdbcType=VARCHAR},
+			#{item.proname,jdbcType=VARCHAR},#{item.data_version,jdbcType=VARCHAR}
+			)
+		</foreach>
+    </insert>
+    
+    
+    <select id="getShapeByName" parameterType="String" resultType="facilityarea">
+    	select name_chn, mesh, poi_id, fa_type, area_flag, geom,data_version from facility_an
+    	where name_chn = #{name_chn}
+    </select>	
+</mapper>

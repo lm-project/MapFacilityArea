@@ -1,0 +1,29 @@
+<table class="tablesorter" cellspacing="0">
+	<thead>
+		<tr>
+			<th>编号</th>
+			<th>设施区域大类</th>
+			<th>设施区域中类</th>
+			<th>POI类型</th>
+			<th>POI类型编码</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		{{#each items}}
+		<tr>
+			<td>{{id}}</td>
+			<td><input type="text" class="edit_type" id='fa_category' value="{{fa_category}}" disabled></td>
+			<td><input type="text" class="edit_type" id='fa_type' value="{{fa_type}}" disabled></td>
+			<td><input type="text" class="edit_type" id='poi_type' value="{{poi_type}}" disabled></td>
+			<td><input type="text" class="edit_type" id='poi_typecode' value="{{poi_typecode}}" disabled></td>
+			<td><input type='image'
+				src='{{../path}}/images/admin/icn_edit.png' id='fatype_edit'
+				title='编辑' value='{{id}}'> <input type='image'
+				src='{{../path}}/images/admin/icn_alert_success.png'
+				id='fatype_update' title='提交更新' value='{{id}}'></td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>

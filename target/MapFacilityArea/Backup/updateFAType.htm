@@ -1,0 +1,32 @@
+<div id="tab_container">
+		<h4 class="alert_info">欢迎维护设施区域类别(FA_TYPE)</h4>
+		<article class="module width_full">
+			<form action="admin/newa" method="post" enctype="multipart/form-data">
+				<header>
+					<h3>Update FA_TYPE</h3>
+				</header>
+				<div class="module_content" style="width:80%;min-width:500px">
+					<fieldset>
+						<label>维护描述，选填</label>
+						<textarea rows="4" name="remark" id="remark"></textarea>
+					</fieldset>
+					<fieldset>
+						<label>添加设施区域类别清单</label> 
+						<input type="file" style="width:80%;visibility:hidden" id="myfiles" name="myfiles">
+						<input type="text" style="width:45%;float:left;margin-top:-12px"  id="filename" readonly>
+						<input type="button" style="width:15%;float:left;margin-top:-12px" id="chooseFile" class="alt_btn" value="选择excel文件">
+						<span class='mg4'></span>
+					</fieldset>
+				</div>
+				<footer>
+					<div class="submit_link" style="float:left;padding-left:20px">
+						<input type="button" value="提交" class="alt_btn" id="submit"> 
+						<input type="reset" value="重置">
+						<span class='mg3'></span>
+					</div>
+				</footer>
+			</form>
+		</article>
+</div>
+		<!-- end of post new article -->
+		<div class="spacer"></div>

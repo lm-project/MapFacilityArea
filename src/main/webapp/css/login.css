@@ -1,0 +1,104 @@
+body{
+	margin: 8px 0px 0px 0px;
+	padding: 0px; 
+	background-color:#eeeeee;
+	overflow:hidden
+}
+
+table,tr,td,img{
+	margin: 0px; 
+	padding: 0px;
+	border: 0px none; 
+}
+
+.username{
+	height: 22px; 
+	line-height: 22px;
+	margin: 0px; 
+	padding: 0px 0px 0px 20px; 
+	border: 0px none; 
+	font-size: 12px;
+	width: 178px;
+	background:url(../images/l_r2_c2.jpg) no-repeat;
+}
+.password{
+	height: 22px; 
+	line-height: 22px;
+	margin: 0px; 
+	padding: 0px 0px 0px 20px; 
+	border: 0px none; 
+	font-size: 12px;
+	width: 178px;
+	background:url(../images/l_r4_c2.jpg) no-repeat;
+}
+
+.submitButton{
+	height: 26px; 
+	margin: 0px; 
+	padding: 0px; 
+	width: 67px;
+	border: 0px none; 
+	background:url(../images/l_r6_c3.jpg) no-repeat;
+	cursor:pointer;
+}
+
+.checkbox1{
+	position: relative;
+	width:100px;
+	top:-50px;
+	left:575px
+}
+
+.police_r1_c1{
+	width:980px;
+	height:286px;
+	background:url(../images/l_r1_c1.jpg) no-repeat;
+}
+
+.police_r2_c1{
+	width:671px;
+	height:294px;
+	background:url(../images/l_r2_c1.jpg) no-repeat;
+}
+
+.police_r2_c4{
+	width:111px;
+	height:294px;
+	background:url(../images/l_r2_c4.jpg) no-repeat;
+}
+.police_r3_c2{
+	width:198px;
+	height:29px;
+	background:url(../images/l_r3_c2.jpg) no-repeat;
+}
+
+.police_r5_c2{
+	width:198px;
+	height:22px;
+	background:url(../images/l_r5_c2.jpg) no-repeat;
+}
+
+.police_r6_c2{
+	width:131px;
+	height:199px;
+	background:url(../images/l_r6_c2.jpg) no-repeat;
+}
+
+.police_r7_c3{
+	width:67px;
+	height:199px;
+	background:url(../images/l_r7_c3.jpg) no-repeat;
+}
+
+/* .spacer{
+	background:url(../images/spacer.gif) no-repeat;
+} */
+
+.mg{
+	display:none;
+}
+
+
+input:-webkit-autofill {
+-webkit-box-shadow: 0 0 0px 1000px white inset;
+} 

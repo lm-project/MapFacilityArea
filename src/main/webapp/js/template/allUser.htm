@@ -1,0 +1,44 @@
+﻿<div class="tab_container">
+				<div id="user_tab" class="tab_content">
+				<table class="tablesorter" cellspacing="0"> 
+				<thead> 
+					<tr> 
+	   					<th><input type="button" value="全选" id="user_selectall"><input type="button" value="删除" class="alt_btn" id="user_delall"></th> 
+	    				<th>用户名</th> 
+	    				<th>真实姓名</th> 
+	    				<th width="268px">email</th> 
+	    				<th>权限
+	    					<select id="searchrole">
+	    						<option value="0">全部</option>
+	    						<option value="1">质检</option>
+			    				<option value="2">作业</option>
+		    				</select>
+	    				</th>
+	    				<th>操作</th> 
+					</tr> 
+				</thead> 
+				<tbody>
+				</tbody>
+			{{#each items}}
+			<tr>
+			<td><input type='checkbox' value='{{uid}}'></td>
+			<td>{{username}}</td>
+			<td>{{truename}}</td>
+			<td>{{email}}</td>
+			<td>{{role}}</td>
+
+			<td><input type='image'
+				src='{{../path}}/images/admin/icn_edit.png' id='user_edit'
+				title='修改' value='{{uid}}'>
+				<input type='image' src='{{../path}}/images/admin/icn_trash.png'
+				id='user_del' title='删除' value='{{uid}}'></td>
+			</tr>
+			{{/each}} 
+				</table>
+				</div><!-- end of #tab1 -->
+				<div id="loadmorepage" class="loadmorepage" >
+				<span class='left'>总记录数：{{totalNum}}</span> {{{paging}}}
+				</div>
+				
+			</div><!-- end of .tab_container -->
+			<div class="spacer"></div>

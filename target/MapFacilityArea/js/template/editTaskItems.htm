@@ -1,0 +1,29 @@
+{{#each items}}
+<ul class='ul' id='ul{{id}}' >
+	<li>
+		<span class='span1' >任务ID:</span>
+		<span id='taskId{{id}}' class='span2'>{{taskid}}</span>
+	 	<span class='span1' style='padding-left:10px;'>类型：</span>
+	 	<span class='span2'>{{typecode}}</span>
+	 	<span id="del{{id}}" class="delStatus" style="visibility: {{havVal del_status}};" title="">无需新增</span>
+	    <a class='small a orange floatr' target='_blank' id='edit_item'  value='{{id}}'>开始编辑</a>
+	</li>
+ 	<li id='li{{id}}'>
+ 		<span class='span1'>关键字:</span>
+ 		<span class='span2' id='tname{{id}}'>{{name}}</span>
+ 	</li>
+ 	<li>
+ 		<span class='span1'>城市:</span>
+	 	<span class='span2' id='city{{id}}'>{{city}}</span>
+ 	</li>
+ 	<li style='display:none'>
+	 	<span id='mesh{{id}}'>{{mesh}}</span>
+	 	<span id='lng{{id}}'>{{x_coord}}</span>
+	 	<span id='lat{{id}}'>{{y_coord}}</span>
+	 	<span id='typecode{{id}}'>{{typecode}}</span>
+	 	<span id='fileId{{id}}'>{{fileId}}</span>
+	 	<span id='taskname{{id}}'>{{taskname}}</span>
+	 	<span id='status{{id}}'>{{status}}</span>
+ 	</li>
+</ul>
+{{/each}}

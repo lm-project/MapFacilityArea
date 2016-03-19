@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="taskMapper">
+	<resultMap id="taskResultMapByPage" type="com.autonavi.mapart.entity.Task">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="remark" column="remark" />
+		<result property="createtime" column="createtime" />
+		<result property="filename" column="file_name" />
+		<result property="userid" column="user_id" />
+		<result property="status" column="status" />
+		<result property="committime" column="commit_time" />
+		<result property="projectname" column="project_name" />
+		<result property="tasktype" column="task_type" />
+	</resultMap>
+	
+	<resultMap id="projectResultMapByGet" type="com.autonavi.mapart.entity.Task">
+		<result property="projectname" column="project_name" />
+		<result property="remark" column="remark" />
+		<result property="filename" column="file_name" />
+	</resultMap>
+	
+	<resultMap id="taskResultByPage" type="com.autonavi.mapart.entity.Task">
+		<result property="name" column="name" />
+		<result property="projectname" column="project_name" />
+		<result property="remark" column="remark" />
+		<result property="committime" column="commit_time" />
+	</resultMap>
+	
+	<resultMap id="taskResultMapByGet" type="com.autonavi.mapart.entity.Task">
+		<result property="id" column="id" />
+	</resultMap>
+	
+	<sql id="base_column">
+		id, name, remark, createtime, file_name, user_id, status, commit_time
+	</sql>
+	
+	<select id="getTaskById" parameterType="int" resultType="task">
+		select
+			<include refid="base_column" />
+		from task
+		<where>
+			id = #{id}
+		</where>
+	</select>
+
+	<select id="getTasksByProjectName" resultType="task">
+		select id from task
+		<where>
+			name like '%${name}%'
+		</where>
+	</select>
+	
+	
+	
+	<select id="selectProjectByPage" statementType="CALLABLE" parameterType="Map">
+		<![CDATA[
+           {call proc_projectbypage(
+              #{pageIndex, mode=IN, jdbcType=INTEGER},
+              #{recordCountPerPage, mode=IN, jdbcType=INTEGER},
+              #{tasktype, mode=IN, jdbcType=INTEGER},
+              #{status, mode=IN, jdbcType=INTEGER},
+              #{projectname, mode=IN, jdbcType=VARCHAR},
+              #{allRecordCount, mode=OUT, jdbcType=INTEGER},
+              #{curResult, mode=OUT, jdbcType=OTHER, javaType=ResultSet, resultMap=projectResultMapByGet}
+           )}
+       ]]>
+	</select>
+	
+	<select id="selectTaskByPage" statementType="CALLABLE" parameterType="Map">
+	<![CDATA[
+           {call p0_sys_model_search(
+              #{pageIndex, mode=IN, jdbcType=INTEGER},
+              #{recordCountPerPage, mode=IN, jdbcType=INTEGER},
+              #{status, mode=IN, jdbcType=INTEGER},
+              #{projectname, mode=IN, jdbcType=VARCHAR},
+              #{uid, mode=IN, jdbcType=INTEGER},
+              #{s_time, mode=IN, jdbcType=VARCHAR},
+              #{e_time, mode=IN, jdbcType=VARCHAR},
+              #{allRecordCount, mode=OUT, jdbcType=INTEGER},
+              #{curResult, mode=OUT, jdbcType=OTHER, javaType=ResultSet, resultMap=taskResultByPage}
+           )}
+       ]]>
+	</select>
+	
+	<select id="selectByPage" statementType="CALLABLE" parameterType="Map">
+		<![CDATA[
+           {call proc_taskbypage(
+              #{pageIndex, mode=IN, jdbcType=INTEGER},
+              #{recordCountPerPage, mode=IN, jdbcType=INTEGER},
+              #{tasktype, mode=IN, jdbcType=INTEGER},
+              #{projectname, mode=IN, jdbcType=VARCHAR},
+              #{uid, mode=IN, jdbcType=INTEGER},
+              #{allRecordCount, mode=OUT, jdbcType=INTEGER},
+              #{curResult, mode=OUT, jdbcType=OTHER, javaType=ResultSet, resultMap=taskResultMapByPage}
+           )}
+       ]]>
+	</select>
+
+	<select id="selectByGet" statementType="CALLABLE" parameterType="Map">
+			<![CDATA[
+	           {call proc_taskbyget(
+	              #{allRecordCount,mode=OUT,jdbcType=INTEGER},
+	              #{curResult,mode=OUT,jdbcType=OTHER, javaType=ResultSet, resultMap=taskResultMapByGet}
+	           )}
+	       ]]>
+	</select>
+
+	<insert id="insert" parameterType="task" useGeneratedKeys="true" keyProperty="id">
+		insert into task (name,
+		<if test="remark != null and remark != ''">
+			remark,
+		</if>
+		file_name, user_id, project_name, task_type ) values
+		(#{name},
+		<if test="remark != null and remark != ''">
+			#{remark},
+		</if>
+		#{filename}, #{userid}, #{projectname}, #{tasktype})
+	</insert>
+
+	<update id="update" parameterType="task">
+		update task
+		<set>
+		    <if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			
+			<if test="remark != null and remark != ''">
+				remark  = #{remark}
+			</if>
+			
+			<if test="status != null and status != ''">
+				status  = #{status}
+			</if>
+		</set>
+		where 
+			<if test="id != null and id != ''">
+				id  = #{id}
+			</if>
+			
+			<if test="projectname != null and projectname != ''">
+				project_name  = #{projectname} and status= 0
+			</if>
+	</update>
+
+	<delete id="delete" parameterType="int">
+		delete from task where id in
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<delete id="deleteproject" parameterType="String">
+		delete from task where project_name in 
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="selectTaskByids" parameterType="int" resultType="task">
+		select
+		<include refid="base_column" />
+		from task
+		where id in
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="getProjectByName" parameterType="String" resultMap="taskResultMapByPage">
+		select project_name,remark,file_name, user_id 
+		from task
+		<where>
+			project_name = #{projectname} and task_type = 0
+		</where>
+		group by project_name,remark,file_name, user_id
+	</select>
+	<select id="getUnsaveCount" parameterType="String" resultType="int">
+		select count(status) from task_item 
+		<where>
+			status in (0,1) and task_id in (select id from task where project_name = #{projectname} and task_type = 0)
+		</where>
+	
+	</select>
+	
+	<select id="getUnsaveCountByTaskid" parameterType="int" resultType="int">
+		select count(1) from task_item 
+		<where>
+			status in (0,1,7) and task_id = #{taskid}
+		</where>
+	</select>
+	
+	
+	<!-- 作业任务提交 -->
+	<update id="updateTaskByOpCommit" parameterType="Map">
+		update task
+		<set>
+			status = #{status},
+			op_commit_time=current_timestamp(0)::timestamp without time zone
+		</set>
+		where id = #{taskid}
+	</update>
+	<!-- 质检任务提交 -->
+	<update id="updateTaskByQaCommit" parameterType="Map">
+		update task
+		<set>
+			status = #{status},
+			qa_commit_time=current_timestamp(0)::timestamp without time zone
+		</set>
+		where id = #{taskid}
+	</update>
+	<!-- 任务领取，包括作业，质检 -->
+	<update id="receive" parameterType="java.util.Map">
+		update task
+		<set>
+			status = #{status},
+			 <if test="op_userid != null and op_userid != ''">
+				op_userid = #{op_userid},
+			</if>
+			 <if test="op_receive_time != null and op_receive_time != ''">
+				op_receive_time=current_timestamp(0)::timestamp without time zone
+			</if>
+			 <if test="qa_userid != null and qa_userid != ''">
+				qa_userid = #{qa_userid},
+			</if>
+			 <if test="qa_receive_time != null and qa_receive_time != ''">
+				qa_receive_time=current_timestamp(0)::timestamp without time zone
+			</if>
+			<if test="op_commit_time != null and op_commit_time != ''">
+				op_commit_time=current_timestamp(0)::timestamp without time zone
+			</if>
+			<if test="qa_commit_time != null and qa_commit_time != ''">
+				qa_commit_time=current_timestamp(0)::timestamp without time zone
+			</if>
+		</set>
+		<where>
+			id in 
+			<foreach item="item" collection="taskids" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+	</update>
+	
+</mapper>

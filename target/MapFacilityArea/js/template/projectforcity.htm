@@ -1,0 +1,32 @@
+<div id="city_tab" class="tab_content">
+	<table class="tablesorter" cellspacing="0">
+		<thead>
+			<tr>
+				<th><input type="button" value="全选" id="city_checkbox" class="alt_btn"></th>
+				<th style="width: 248px">城市</th>
+				<th style="width: 110px">作业项总数</th>
+				<th style="width: 110px">已被领取数</th>
+				<th style="width: 110px">剩余数量</th>
+				<th>领取数量</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+		{{#each items}}
+		<tr>
+			<td><input name="city" type='checkbox' value={{city}}></td>
+			<td id='city'>{{city}}</td>
+			<td>{{total}}</td>
+			<td style='color:red'>{{received}}</td>
+			<td style='color:red'>{{lave total received}}</td>
+			<td><input type= "text" id="receive_num"></td>
+			<td>
+				<input type='image' src='{{../path}}/images/admin/icn_alert_success.png'
+				id='receive_city' title='点击领取'/>
+			</td>
+		</tr>
+		{{/each}}
+	</table>
+</div>
+<!-- end of #tab1 -->

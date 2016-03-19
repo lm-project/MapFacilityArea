@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<#assign ctx=(rc.getContextPath())!''>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="${ctx}/css/basic.css" />
+<script type="text/javascript" src="${ctx}/js/common/jquery-1.9.1.js"></script>
+<script type="text/javascript">
+window.onload = function() {
+    /* 地图展开与收起*/
+    var mainLeft = $("#main_left", parent.document);
+    var mapContainer = $("#map_container", parent.document);
+
+    $("#expandMap").click(function() {
+        mainLeft.toggle();
+
+        if (mainLeft.is(":visible")) {
+            $(this).removeClass('expand_map_close_arrow');
+            mapContainer.css('margin-left', '330px');
+        } else {
+            $(this).addClass('expand_map_close_arrow');
+            mapContainer.css('margin-left', '0');
+        }
+    });
+
+    var fun = function() {
+        if (parent.PCMAP && parent.PCMAP.events) {
+            clearInterval(timer);
+            // 地图左侧收起 展开 点击事件
+            parent.PCMAP.events.on('main-triggerExpandMapClick', function(param) {
+                var is = param.data;
+                var isOpen = mainLeft.is(":visible");
+                if (is && !isOpen) {
+                    $('#expandMap').trigger('click');
+                }
+                if (!is && isOpen) {
+                    $('#expandMap').trigger('click');
+                }
+            });
+        }
+    };
+
+    // 进入系统时所有模块都异步加载 可能有些方法尚未加载 加一监听
+    timer = setInterval(fun, 10);
+    fun();
+}
+</script>
+</head>
+<body>
+    <div class="expand_map" id="expandMap">
+    </div>
+</body>
+</html>

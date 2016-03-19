@@ -1,0 +1,25 @@
+<table class="tablesorter" cellspacing="0">
+	<thead>
+		<tr>
+			<th><input type="button" value="全选" id="selectalltask"></th>
+			<th>任务名称</th>
+			<th>备注</th>
+			<th>创建时间</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each items}}
+		<tr>
+			<td><input type='checkbox' name="taskid" value={{id}}></td>
+			<td>{{name}}</td>
+			<td>{{remark}}</td>
+			<td>{{createtime}}</td>
+			<td>
+			<input type='image' src='{{../path}}/images/admin/icn_edit.png' id='edit' title='点击查看作业项' value='{{aid}}'>
+			<input value={{id}} type="image" src="/MapFacilityArea/images/admin/icn_alert_success.png" id="op_commit" title="提交">
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>

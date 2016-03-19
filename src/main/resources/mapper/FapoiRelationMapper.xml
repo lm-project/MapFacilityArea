@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="fapoiRelationMapper">
+
+	<insert id="insert" parameterType="java.util.List">
+		insert into fa_poi_relation (fa_category, fa_type, poi_typecode, poi_type ) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			#{item.fa_category,jdbcType=VARCHAR}, #{item.fa_type,jdbcType=VARCHAR},
+			#{item.poi_typecode,jdbcType=VARCHAR}, #{item.poi_type,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+
+	<select id="getAllFatypes"  resultType="fapoiRelation">
+		select * from fa_poi_relation
+	</select>
+	
+	<delete id="delete">
+		TRUNCATE TABLE fa_poi_relation
+	</delete>
+	
+	<select id="queryRelationList" parameterType="Map" resultType="fapoiRelation">
+		select * from fa_poi_relation 
+		<where>
+			<if test="fa_category != null and fa_category != ''">
+				fa_category = #{fa_category}
+			</if>
+			<if test="fa_type != null and fa_type != ''">
+				and fa_type = #{fa_type}
+			</if>
+			<if test="poi_type != null and poi_type != ''">
+				and poi_type = #{poi_type}
+			</if>
+		</where>
+		order by id asc
+	</select>
+	
+	<update id="update" parameterType="fapoiRelation">
+		update fa_poi_relation
+		<set>
+			fa_category=#{fa_category}, fa_type=#{fa_type}, poi_typecode=#{poi_typecode}, poi_type=#{poi_type}
+		</set>
+		where id = #{id}
+	</update>
+	
+	<select id="getFacategory" resultType="String">
+		select fa_category from fa_poi_relation group by fa_category
+	</select>
+	
+	<select id="getFatypeList" parameterType="Map" resultType="String">
+		select fa_type from fa_poi_relation 
+		<where>
+			<if test="fa_category != null and fa_category != ''">
+				fa_category = #{fa_category}
+			</if>
+		</where>
+		group by fa_type
+	</select>
+	
+	<select id="getPoitypeList" parameterType="Map" resultType="String">
+		select poi_type from fa_poi_relation
+		<where>
+			<if test="fa_type != null and fa_type != ''">
+				fa_type = #{fa_type}
+			</if>
+		</where>
+		group by poi_type
+	</select>
+</mapper>

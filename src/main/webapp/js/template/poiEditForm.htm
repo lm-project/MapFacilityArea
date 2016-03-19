@@ -1,0 +1,113 @@
+	<li class="tabs">
+		<div id="editFacilityPro" class="pro proAcition" >编辑设施区域属性</div>
+		<div id="editQA" class="pro">编辑质检属性</div>
+	</li>
+	<form>
+	<table  id="properties">
+		<tbody>
+		<tr>
+			<td title="中文名称（默认值空）">NAME_CHN(只读)</td>
+			<td><input type="text" class="text" id="NAME_CHN" value='{{name_chn}}'/>
+			<input type="hidden" id="polygon" onpropertychange="polygonChange(e)" value='{{polygon}}'/></td>
+		</tr>
+		<tr>
+			<td title="图幅号">MESH(只读)</td>
+			<td><input type="text" readonly="readonly" class="text" id="MESH" style="width:150px" value='{{mesh}}' />
+			<input type='checkbox' class='checkbox' id='meshbox'></td>
+		</tr>
+		
+		<tr>
+			<td title="主POI用户编号">POI_ID(只读)</td>
+			<td><input type="text" class="text" id="POI_ID" readonly="readonly"  value='{{poi_id}}'/></td>
+		</tr>
+		
+		<tr>
+			<td title="设施区域类型">FA_TYPE</td>
+			<td><input type="text" class="text" id="FA_TYPE"  value='{{fa_type}}'/></td>
+		</tr>
+		
+		<tr>
+			<td title="显示等级">DISP_CLASS</td>
+			<td><input type="text" class="text" id="DISP_CLASS"   value='{{disp_class}}'/></td>
+		</tr>
+		
+		<tr>
+			<td title="制作方式">FA_FLAG</td>
+			<td><input type="text" class="text" id="FA_FLAG"  value='{{fa_flag}}'/></td>
+		</tr>
+		
+		<tr>
+			<td title="区域归属">AREA_FLAG</td><td>
+			<select id="AREA_FLAG" style="height:28px;width: 175px;border-left: 1px solid #888888" value='{{area_flag}}'>
+					<option value="0" style="height:20px;">大陆</option>
+					<option value="1" style="height:20px;">港澳</option>
+					<option value="2" style="height:20px;">大陆港澳共有</option>
+				</select>
+			</td>
+			<input  id="GID"   type="hidden" value='{{gid}}'/>
+			<input  id="FA_ID"  type="hidden" value='{{fa_id}}'/>
+					<input  id="FA"  type="hidden" value='{{fa}}'/>
+					<input  id="PRONAME" type="hidden" value = '{{proname}}'/>
+					<input  id="TYPE_ID" type="hidden" value = '{{fatype_id}}'/>
+		</tr>
+		<tr>
+			<td title="精度">PRECISION</td><td>
+			<select id="PRECISION" style="height:28px;width: 175px;border-left: 1px solid #888888" value='{{precision}}'>
+					<option value="A" style="height:20px;"
+					selected="{{#ifCond precision 'A'}}true{{else}}false{{/ifCond}}">A(高)</option>
+					<option value="B" style="height:20px;"
+					selected="{{#ifCond precision 'B'}}true{{else}}false{{/ifCond}}">B(低)</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td title="数据来源">SOURCES</td><td>
+			<select id="SOURCES" style="height:28px;width: 175px;border-left: 1px solid #888888" value='{{sources}}'>
+					<option value="1" style="height:20px;"
+					selected="{{#ifCond sources '1'}}true{{else}}false{{/ifCond}}">1(ANQC)</option>
+					<option value="2" style="height:20px;"
+					selected="{{#ifCond sources '2'}}true{{else}}false{{/ifCond}}">2(TX)</option>
+					<option value="3" style="height:20px;"
+					selected="{{#ifCond sources '3'}}true{{else}}false{{/ifCond}}">3(行业数据)</option>
+					<option value="0" style="height:20px;"
+					selected="{{#ifCond sources '0'}}true{{else}}false{{/ifCond}}">0(默认值)</option>
+				</select>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+	</form>
+    <datalist id="qc_code_list" >
+		<option label="设施区域形状" value="3142001"/>
+		<option label="关联关系" value="3143003" />
+		<option label="设施区域多做" value="3141002" />
+		<option label="设施区域漏做" value="3141003" />
+	</datalist>
+	<datalist id="op_feedback_list" >
+		<option label="数据错误" value="a"/>
+		<option label="数据正确" value="b" />
+	</datalist>
+	<div for="ddd" ></div>
+    <table id="qaCon" style="display: none">
+	  <tr>
+	   <td title="检查项代码"><label for="qc_code">qc_code</label></td>
+	   <td><input type="text" class="text" id="qc_code" placeholder="检查项代码" autocomplete="off" required="required" list="qc_code_list"/></td>
+	  </tr>
+	  <tr>
+	    <td title="图层">tuceng</td>
+	    <td><input type="text" class="text" id="tuceng" value="1" required="required" readonly="readonly" /></td>
+	  </tr>
+	  <tr>
+	    <td title="质检问题描述"><label for="des">des</label></td>
+	 	<td><textarea rows="4" cols="50" class="text"  id="des" placeholder="质检问题描述" required="required" ></textarea></td> 
+	  </tr>
+	   <tr>
+	    <td title="作业反馈标记" >feedback</td>
+	    <td><input type="text" class="text" id='feedback' placeholder="作业错误确认" autocomplete="off" required="required" list="op_feedback_list"/></td>
+	  </tr>
+	   <tr>
+	    <td title="作业问题描述" ><label for="exp">exp</label></td>
+	 	<td><textarea rows="4" cols="50" class="text"  id="exp" placeholder="作业问题描述" required="required" ></textarea></td> 
+	  </tr>
+	  <tr><td colspan="2" style="text-align: center;"><button id="saveQA">保存</button></td></tr>
+	</table>

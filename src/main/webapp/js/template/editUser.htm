@@ -1,0 +1,50 @@
+<h4 class="alert_warning">添加修改用户信息时，下列输入框为选填！</h4>
+		<article class="module width_full">
+			<header>
+				<h3>Edit User</h3>
+			</header>
+			<div class="module_content">
+				<fieldset class="u">
+					<label>用户名</label> <input type="text" id="username" readonly value={{username}}>
+										<input type="hidden" id="uid" value={{uid}}>
+					<div class="mg1"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+				
+					<label>修改密码</label> 
+					<input type="password" id="password1" style="margin-bottom:5px !important">
+					<div class="mg1"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+					<div class="mg2">
+						<span>如果不需要修改密码，请不用填写!</span>
+					</div>
+					<label>重复填写密码</label>
+					<input type="password" id="password2">
+					<div class="mg1"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+					<div class="mg2"><span></span></div>
+				
+					<label>真实姓名</label> <input type="text" id="truename" value={{truename}}>
+					<div class="mg1"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+					<div class="mg2"><span>请填写用户真实姓名!</span></div>
+
+				
+					<label>邮箱</label> <input type="text" id="email" value={{email}}>
+					<div class="mg1"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+					<div class="mg2"><span>请填写正确的用户邮箱!</span></div>
+				
+					<label>用户权限</label> <select style="width:67%;float:left" id="role">
+						<option value="0">请选择</option>
+						<option value="1">质检</option>
+						<option value="2">作业</option>
+					</select>
+					<div class="mg1"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+					<div class="mg2"><span>请选择用户权限!</span></div>
+				</fieldset>
+			</div>
+			<footer>
+				<div style="padding:5px 0px 5px 20px">
+					<input type="submit" value="修改" class="alt_btn" id='edit'> 
+					<input type="button" value="返回" class="alt_btn" id='back'>
+					<span class="mg3"></span>
+				</div>
+			</footer>
+		</article>
+		<!-- end of post new article -->
+		<div class="spacer"></div>

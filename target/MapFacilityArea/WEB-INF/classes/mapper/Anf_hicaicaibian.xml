@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Anf_hicaicaibianMapper">
+    <select id="getXidByMESHID_POIID" parameterType="Anf_hicaicaibian" resultType="String">
+    	select POIID from anf_shicaicaibian  
+    	where MESHID = #{MESH} and POI_ID = #{POI_ID}
+    </select>	
+    
+    
+    <select id="selectXidListByMESHID_POIID" parameterType="java.util.List" resultType="java.util.List">
+		select POIID from anf_shicaicaibian  where
+		<foreach collection="list" item="item" index="index"
+			open="(" separator="," close=")">
+			 (MESH = #{item.MESH,jdbcType=VARCHAR},
+			  and POI_ID = #{item.POI_ID,jdbcType=})
+		</foreach>
+	</select>
+</mapper>

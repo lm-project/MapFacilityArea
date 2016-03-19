@@ -1,0 +1,49 @@
+<article class="module width_full">
+		<div class="tab_container" >
+				<div id="taskitem_tab" class="tab_content" style="overflow:auto;height:100%">
+					<table class="tablesorter" cellspacing="0"> 
+				<thead> 
+					<tr> 
+	   					<th><input type="button" value="全选" id="taskitem_selectall">
+	   					<input type="button" value="删除" class="alt_btn" id="taskitem_delall"></th> 
+	    				<th>PCS_ID</th> 
+	    				<th>mesh</th> 
+	    				<th>名称</th>
+	    				<th>变形后x</th>
+	    				<th>变形后y</th>
+	    				<th>城市</th>
+	    				<th>类型编码</th>
+	    				<th>处理类型</th>
+	    				<th>状态</th>
+	    				<th>操作</th> 
+					</tr> 
+				</thead> 
+				
+				<tbody> 
+				{{#each items}}
+					<tr><td><input type='checkbox' value='{{id}}'></td>
+					<td>{{pcs_id}}</td>
+					<td>{{mesh}}</td>
+					<td>{{name}}</td>
+					<td>{{x_coord}}</td>
+					<td>{{y_coord}}</td>
+					<td>{{city}}</td>
+					<td>{{typecode}}</td>
+					<td>{{processtype}}</td>
+					<td>{{status}}</td>
+					<td><input type='image' src='{{../path}}/images/admin/icn_trash.png' id='taskitem_recycle' title='回收'></td> 
+					
+					</tr>
+				{{/each}}
+				</tbody> 
+			</table>
+			<div id="loadmorepage" class="loadmorepage" >
+				<span class='left'>总记录数：{{totalNum}}</span> {{{paging}}}
+			</div>
+		</div><!-- end of #tab1 -->
+				
+</div><!-- end of .tab_container -->
+</article><!-- end of content manager article -->
+<div class="spacer"></div>
+
+				

@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="taskitemMapper">
+	<resultMap id="taskitemResultMap" type="com.autonavi.mapart.entity.Taskitem">
+		<result property="id" column="id" />
+		<result property="taskid" column="task_id" />
+		<result property="pcsid" column="pcs_id" />
+		<result property="mesh" column="mesh" />
+		<result property="name" column="name" />
+		<result property="x_coord" column="x_coord" />
+		<result property="y_coord" column="y_coord" />
+		<result property="city" column="city" />
+		<result property="typecode" column="type_code" />
+		<result property="processtype" column="process_type" />
+		<result property="status" column="status" />
+		<result property="receivetime" column="receive_time" />
+		<result property="userid" column="user_id" />
+		<result property="fadeback" column="fadeback" />
+		<result property="committime" column="commit_time" />
+		<result property="number" column="number" />
+		<result property="taskname" column="task_name" />
+		<result property="qataskid" column="qa_task_id" />
+		<result property="qauserid" column="qa_user_id" />
+		<result property="qataskname" column="qa_task_name" />
+	</resultMap>
+
+	<resultMap id="task_ResultMap" type="com.autonavi.mapart.entity.Taskitem">
+		<result property="taskid" column="t ask_id" />
+		<result property="taskname" column="task_name" />
+	</resultMap>
+	
+	<sql id="base_column">
+		id, task_id taskid, task_name taskname, number, pcs_id pcsid, mesh, name,
+		x_coord, y_coord, city,
+		type_code typecode, process_type processtype, status, receive_time receivetime,del_status,
+		user_id userid, fadeback, commit_time committime
+	</sql>
+
+	<!--  查询视图 QA_City_Number -->
+	<select id="findCitysByProjectname" parameterType="String" resultType="qacitynumber">
+		select projectname, city , total, received  from QA_City_Number where  projectname = #{projectname}
+	</select>
+	
+	<select id="selectByIds" parameterType="int" resultType="taskitem">
+		select * from task_item where  task_id in 
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="getTaskitemsByQuery" parameterType="Map" resultType="taskitem">
+		select
+		<include refid="base_column" />
+		,(select u.truename from user_db u where u.uid = user_id ) truename
+		from task_item
+		<where>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+			<if test="task_name != null and task_name != ''">
+				and task_name = #{taskname}
+			</if>
+			<if test="name != null and name != ''">
+				and name like '%${name}%'
+			</if>
+			<if test="process_type != null and process_type != ''">
+				and process_type = #{processtype}
+			</if>
+			<if test="stime != null and stime != ''">
+				and stime = #{stime}
+			</if>
+			<if test="etime != null and etime != ''">
+				and etime = #{etime}
+			</if>
+			<if test="city != null and city != ''">
+				and city = #{city}
+			</if>
+			<if test="status != null">
+				and status = #{status}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="findAllItems"  resultType="taskitem">
+		select <include refid="base_column" /> from task_item
+	</select>
+	
+	<select id="findCheckTasks" parameterType="int" resultType="task">
+		select name, id from task
+		<where>
+			user_id = #{usrid} and task_type = 1
+		</where>
+	</select>
+	
+	<select id="getTaskListByUseridAndStatus"  statementType="CALLABLE"
+		parameterType="Map">
+		<![CDATA[
+           {call proc_task_item_bysearch(
+              #{pageIndex,mode=IN,jdbcType=INTEGER},
+              #{recordCountPerPage,mode=IN,jdbcType=INTEGER},
+              #{status,mode=IN,jdbcType=INTEGER},
+              #{userid,mode=IN,jdbcType=INTEGER},
+              #{taskname,mode=IN,jdbcType=VARCHAR},
+              #{processtype,mode=IN,jdbcType=VARCHAR},
+              #{allRecordCount,mode=OUT,jdbcType=INTEGER},
+              #{curResult,mode=OUT,jdbcType=OTHER, javaType=ResultSet, resultMap=task_ResultMap}
+           )}
+       ]]>
+	</select>
+	
+	<select id="getTaskitemListByUseridAndStatus"  statementType="CALLABLE"
+		parameterType="Map">
+		<![CDATA[
+           {call proc_task_itembyquery(
+              #{pageIndex,mode=IN,jdbcType=INTEGER},
+              #{recordCountPerPage,mode=IN,jdbcType=INTEGER},
+              #{taskid,mode=IN,jdbcType=INTEGER},
+              #{status,mode=IN,jdbcType=INTEGER},
+              #{userid,mode=IN,jdbcType=INTEGER},
+              #{allRecordCount,mode=OUT,jdbcType=INTEGER},
+              #{curResult,mode=OUT,jdbcType=OTHER, javaType=ResultSet, resultMap=task_ResultMap}
+           )}
+       ]]>
+	</select>
+
+	<select id="getTaskitemsByPage" statementType="CALLABLE"
+		parameterType="Map">
+		<![CDATA[
+           {call proc_task_itembypage(
+              #{pageIndex,mode=IN,jdbcType=INTEGER},
+              #{recordCountPerPage,mode=IN,jdbcType=INTEGER},
+              #{taskid,mode=IN,jdbcType=INTEGER},
+              #{task_name,mode=IN,jdbcType=VARCHAR},
+              #{allRecordCount,mode=OUT,jdbcType=INTEGER},
+              #{curResult,mode=OUT,jdbcType=OTHER, javaType=ResultSet, resultMap=taskitemResultMap}
+           )}
+       ]]>
+	</select>
+
+	<insert id="insert" parameterType="java.util.List">
+		insert into task_item (task_id, task_name, number, pcs_id, mesh, name,
+		x_coord, y_coord, city,
+		type_code, process_type) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			#{item.taskid,jdbcType=INTEGER}, #{item.taskname,jdbcType=VARCHAR},
+			#{item.number,jdbcType=VARCHAR}, #{item.pcsid,jdbcType=VARCHAR},
+			#{item.mesh,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR},
+			#{item.x_coord,jdbcType=VARCHAR}, #{item.y_coord,jdbcType=VARCHAR},
+			#{item.city,jdbcType=VARCHAR}, #{item.typecode,jdbcType=VARCHAR},
+			#{item.processtype,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+
+	<update id="receive" parameterType="java.util.Map">
+		update task_item
+		<set>
+			status = 1,user_id=#{userid},
+			receive_time=current_timestamp(0)::timestamp without time zone
+		</set>
+		<where>
+			status=0 and task_id in
+			<foreach item="item" collection="taskids" open="(" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</where>
+	</update>
+	
+	<update id="qareceive" parameterType="java.util.Map">
+		update task_item
+		<set>
+			qa_task_id = #{taskid}, status = 4, qa_user_id=#{userid}, qa_task_name = #{qataskname}
+		</set>
+		<where>
+			id in ( 
+				select id from task_item where task_id in (select id from task where project_name = #{projectname}) and status=3 and city= #{city} order by id  limit #{number} )
+		</where>
+	</update>
+	
+	
+	<select id="getQaUnreceiveUnmber" parameterType="java.util.Map" resultType="int">
+		select count(id) from task_item 
+		<where>
+			task_name like '%${projectname}%' and status=3 and city= #{city}
+			
+			<if test="userid != null">
+				and qa_user_id = #{userid}
+			</if>
+			
+		</where>
+	</select>
+
+	<update id="update" parameterType="taskitem">
+		update task_item
+		<set>
+			status= #{status}
+		</set>
+		where id = #{id}
+	</update>
+	<update id="updateDelete" parameterType="taskitem">
+		update task_item
+		<set>
+			status= #{status},del_status = #{del_status}
+		</set>
+		where id = #{id}
+	</update>
+	<delete id="delete" parameterType="String">
+		delete from task_item where id in
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<select id="getTaskitemByQaTaskIds" parameterType="java.util.Map"
+		resultType="taskitem">
+		select <include refid="base_column" /> from task_item where qa_task_id in
+		<foreach item="item" collection="taskIds" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="selectByTaids" parameterType="java.util.Map" resultType="taskitem">
+		select <include refid="base_column" /> from task_item where user_id= 
+			#{userId} and status in (1,2) and task_id in
+		<foreach item="item" collection="taskIds" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="findAllAssids" resultType="java.lang.String">
+		select distinct task_name
+		from task_item where status=0
+	</select>
+
+	<select id="queryUnreByPage" statementType="CALLABLE"
+		parameterType="Map">
+	<![CDATA[
+		{call proc_task_itemByQuery(
+			#{pageIndex,mode=IN,jdbcType=INTEGER},
+			#{recordCountPerPage,mode=IN,jdbcType=INTEGER},
+            #{task_name,mode=IN,jdbcType=VARCHAR},
+            #{name,mode=IN,jdbcType=VARCHAR},
+            #{process_type,mode=IN,jdbcType=VARCHAR},
+            #{stime,mode=IN,jdbcType=VARCHAR},
+            #{etime,mode=IN,jdbcType=VARCHAR},
+            #{city,mode=IN,jdbcType=VARCHAR},
+            #{allRecordCount,mode=OUT,jdbcType=INTEGER},
+            #{curResult,mode=OUT,jdbcType=OTHER, javaType=ResultSet, resultMap=taskResultMap}
+		)}
+	]]>
+	</select>
+	<delete id="deleteByIds" parameterType="String">
+		delete from task_item where id in
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<delete id="deleteByTaskIds" parameterType="String">
+		delete from task_item where task_id in
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="recover" parameterType="java.util.Map">
+		update task_item 
+		<set>
+			status=0, user_id = null
+		</set>
+		<where>
+			<if test="taskids != null and taskids != ''">
+				and task_id in 
+				<foreach item="item" collection="taskids" open="(" separator=","
+				close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="taskitemids != null and taskitemids != ''">
+				and id in 
+				<foreach item="item" collection="taskitemids" open="(" separator=","
+				close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</update>
+	
+	<update id="commit" parameterType="Map">
+		update task_item
+		<set>
+			status = #{status}
+		</set>
+		where task_id in (select id from task where project_name = #{projectname} and task_type = #{tasktype})
+	</update>
+	
+</mapper>

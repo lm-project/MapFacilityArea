@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+	http://www.springframework.org/schema/mvc 
+    http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<description>Spring-web MVC配置</description>
+
+	<!-- 对所有类进行扫描，以完成Bean创建和自动依赖注入的功能 -->
+	<context:component-scan base-package="com.autonavi.mapart">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="useDefaultSuffixPattern" value="false" />
+	</bean>
+
+	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/images/**" location="/images/" />
+
+	 <!-- 当请求应用程序首页时，将执行/index请求，还可以设定成redirect 
+	<mvc:view-controller path="/" view-name="forward:/index" />-->
+
+	<!-- 这两个类用来启动基于Spring MVC的注解功能，将控制器与方法映射加入到容器中 -->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="mappingJacksonHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+	<bean id="mappingJacksonHttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="cache" value="true" />
+		<!-- 模板后缀，指定html页面为模板 -->
+		<property name="suffix" value=".html" />
+		<!-- 使用这个模板类来解析视图 -->
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<!-- 允许访问请求属性，默认为false -->
+		<property name="exposeRequestAttributes" value="true" />
+		<!-- 允许访问会话属性，默认为false -->
+		<property name="exposeSessionAttributes" value="true" />
+		<!-- 页面上下文，类似于request.contextPath -->
+		<property name="requestContextAttribute" value="rc" />
+		<!-- 模板输出内容编码，此处应与defaultEncoding保持一致 -->
+		<property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+
+	<bean id="freemarkerConfig"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<!-- 模板文件所在目录 -->
+		<property name="templateLoaderPath" value="WEB-INF/pages/" />
+		<!-- 指定FreeMarker模板文件的编码格式 -->
+		<property name="defaultEncoding" value="UTF-8" />
+		<!-- FreeMarker属性配置 -->
+		<property name="freemarkerSettings">
+			<props>
+				<!-- 每隔5小时检查模板是否更新，单位为秒 如果不经常更新模板可将更新的延迟时间设定长一点 -->
+				<!-- <prop key="template_update_delay">18000</prop> -->
+				<!-- 指定地区语言环境，我们的语言是中文 -->
+				<prop key="locale">zh_CN</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

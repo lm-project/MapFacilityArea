@@ -1,0 +1,37 @@
+<div id="prc_tab" class="tab_content">
+	<table class="tablesorter" cellspacing="0">
+		<thead>
+			<tr>
+				<th><input type="button" value="全选" id="prc_checkbox" class="alt_btn"></th>
+				<th style="width: 110px">项目名称</th>
+				<th style="width: 200px">项目描述</th>
+				<th style="width: 268px">项目上传任务清单</th>
+				<th>创建时间</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+		{{#each items}}
+		<tr>
+			<td><input name="prc" type='checkbox' value={{projectname}}></td>
+			<td>{{projectname}}</td>
+			<td>{{remark}}</td>
+			<td>{{filename}}</td>
+			<td>{{createtime}}</td>
+
+			<td><input type='image'
+				src='{{../path}}/images/admin/icn_edit.png' id='prc_edit_{{@index}}' title='查看子任务'>
+				<input type='image' src='{{../path}}/images/admin/icn_alert_success.png'
+				id='prc_commit' title='提交'>
+				<input type='image' src='{{../path}}/images/admin/icn_jump_back_2.png'
+				id='prc_detail' title='展开'>
+			</td>
+		</tr>
+		{{/each}}
+	</table>
+</div>
+<!-- end of #tab1 -->
+<div id="loadmorepage" class="loadmorepage">
+	<span class='left'>总记录数：<lable id="totalNum">{{totalNum}}</lable></span> {{{paging}}}
+</div>

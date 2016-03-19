@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="userMapper">
+	<resultMap id="userResultMap" type="com.autonavi.mapart.entity.User">
+       <result property="uid" column="uid"/>
+       <result property="username" column="username"/>
+       <result property="truename" column="truename"/>
+       <result property="email" column="email"/>
+       <result property="role" column="role"/>
+     </resultMap>
+	
+	<sql id="base_column">
+	    uid, username, password, role, truename, email
+	</sql>
+	
+	<sql id="login_column">
+	    u.uid, u.username, u.password, u.role, u.truename, u.email, a.authority
+	</sql>
+	
+	<select id="loginByQuery" parameterType="user" resultType="user">
+		select 
+		<include refid="login_column" />
+		from user_db as u inner join authorities_db as a on u.username=a.username
+		<where>
+				u.username= #{username} and u.password = md5(#{password})
+		</where>
+	</select>
+	
+	<select id="getUserByName" parameterType="user" resultType="user">
+		select 
+		<include refid="login_column" />
+		from user_db as u inner join authorities_db as a on u.username=a.username
+		<where>
+				u.username= #{username}
+		</where>
+	</select>
+	
+	<select id="selectById" parameterType="user" resultType="user">
+		select 
+		<include refid="base_column" />
+		from user_db 
+		<where>
+			<if test="uid != null and uid != ''">
+				uid = #{uid}
+			</if>
+			<if test="email != null and email != ''">
+				email = #{email}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectByPage" statementType="CALLABLE" parameterType="Map">
+		<![CDATA[
+           {call proc_user_db_search(
+              #{pageIndex,mode=IN,jdbcType=INTEGER},
+              #{recordCountPerPage,mode=IN,jdbcType=INTEGER},
+              #{truename,mode=IN,jdbcType=VARCHAR},
+              #{role,mode=IN,jdbcType=INTEGER},
+              #{allRecordCount,mode=OUT,jdbcType=INTEGER},
+              #{curResult,mode=OUT,jdbcType=OTHER, javaType=ResultSet, resultMap=userResultMap}
+           )}
+       ]]>
+	</select>
+
+	<insert id="insert" parameterType="user">
+		insert into user_db (username, password, truename, email, role) values (#{username}, md5(#{password}), #{truename}, #{email}, #{role})
+	</insert>
+	
+	<update id="update" parameterType="user">
+		update user_db 
+		<set>
+			<if test="truename != null and truename != ''">
+				truename = #{truename}
+			</if>
+			<if test="email != null and email != ''">
+				, email = #{email}
+			</if>
+			<if test="role != null and role != ''">
+				, role = #{role}
+			</if>
+			<if test="password != null and password != ''">
+				, password = md5(#{password})
+			</if>
+		</set>
+		where uid = #{uid}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from user_db where uid in 
+		<foreach item="item" collection="array" open="(" separator="," close=")">
+			#{item}  
+    	</foreach>  
+	</delete>
+	
+</mapper>

@@ -1,0 +1,19 @@
+<table class="tablesorter" cellspacing="0">
+	<thead>
+		<tr>
+			<th><input type="button" value="全选" id="selectalltask"
+				style="display: block;"></th>
+			<th>任务名称</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		{{#each items}}
+		<tr>
+			<td><input type='checkbox' value={{id}}></td>
+			<td>{{name}}</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>

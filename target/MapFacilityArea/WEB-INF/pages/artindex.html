@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html>
+  <head data-gwd-animation-mode="quickMode">
+	<title>设施区域在线制作平台</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+	<#assign ctx=(rc.getContextPath())!''>
+	<link rel="shortcut icon" type="image/x-icon" href="${ctx}/images/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="${ctx}/css/basic.css">
+	<link rel="stylesheet" type="text/css" href="${ctx}/css/map.css">
+	<link rel="stylesheet" type="text/css" href="${ctx}/css/jquery.jscrollpane.css">
+	<link rel="stylesheet" type="text/css" href="${ctx}/css/jquery.nouislider.min.css">
+	<script>var path = "${ctx}";
+		var require = {
+			urlArgs : "bust=" + new Date().getTime()
+		};
+	</script>
+	<script type="text/javascript" src="${ctx}/js/common/OpenLayers.js"></script>
+	<script id="taskTemplate" type="text/x-handlebars-template" ></script>
+  </head>
+  <body  width="100%">
+    <div id="mainTop">
+      <div id="divSearchBox" class="searchBox" tabindex="0">
+          <ul class="searchOption"><li class="action">位置</li><li>名称</li></ul>
+          <input id="txtCity" name="txtCity" type="text" value="全国" class="searchCity" method="city" cityid="0101" cityname="北京" datacheck="">
+          <input id="searchKey" name="searchTxt" type="text" style="color:#999999;" placeholder='位置/地标/商圈' class="searchTxt">
+          <input type="checkbox" id="clear" checked style="position:absolute;left:60px;top:63px"><label style="position:absolute;left:76px;top:62px">清除历史记录</label>
+          <input type="checkbox" id="load" checked style="position:absolute;left:170px;top:63px"><label style="position:absolute;left:186px;top:62px">自动加载已有数据</label>
+          <input id="btnSearch" name="btnSearch" type="button" class="searchBnt" onclick="search();">
+          <input type="hidden" name="linkType" value="search">
+          <input type="hidden" id="searchhelp">
+        <div id="result1" style="position:absolute;left:60px;top:54px;background:#fafafa; z-index:300; overflow: auto; width: 393px;border: 1px solid gray;display:none;"></div>  
+      </div>
+      <div style="float:left;margin-top:34px">
+    	 <span id="message"></span>
+	     <span id="errormessage"></span>
+	  </div>
+      <div class="user floatr">
+	  <button onclick="window.history.go(-1)">返回</button>
+			<p>登录账户:${truename}</p>
+			<p><a href="${ctx}/logout">退出</a></p>
+	  </div>
+    </div>
+    <div class="clear"></div>
+    <div id="main">
+      <div id="main_left">
+        <div id="resultInfo" class="resultInfo" style="margin-left:2px">
+	      	<div id="refer" class="refer" style="display:none">
+	      			<div class="top1">参考信息</div>
+		      		<div class="style6" id="referpolygons1"></div>
+		      		<div class="clear"></div>
+		      		<div class="style6" id="referpolygons2"></div>
+	      	</div>
+	      	<div class="clear"></div>
+	      	<div>
+	      		<div class="top2">
+	      			 <ul class="top_conbox">
+	      			 	<li class="action">未完成任务项</li><li>已完成任务项</li>
+	      			 </ul>
+	      		</div>
+	      		<div>
+	      			<ul id="taskitem">
+	      				<li><div class="tasks" id="tasks" style="overflow-x:hidden"></div></li>
+	      				<li><div class="tasks" id="completedtasks" style="overflow-x:hidden"></div></li>
+	      			</ul>
+	      		</div>
+	      	</div>
+	      	<div class="clear"></div>
+      		<div><input type="text" placeholder='查询任务项' id='searchTaskitem'/></div>
+      	</div> 
+      </div>
+      <div id="map_container">
+        <div id="map_container_tools" >
+          <div class="floatl">
+             <ul id="map_left_ul">
+              <li>
+                <div class="white-border">
+					<span class="floatl mt4" id="gdMapZoom"></span>
+				 	<span class="floatl cursor MC002" title="放大" id="enlarge"></span>
+				 	<span class="floatl cursor MC003" title="缩小" id="ensmall"></span>
+				 	<span class="floatl cursor MC001" title="移动" id="move"></span>
+<!--				 	<span class="floatl cursor MC004" id="editpolygon" title="点击打开图形编辑"></span>-->
+				 	
+                </div>
+	          </li>
+            </ul>
+          </div><!-- Tool Zoom-->
+
+          <div class="floatr" id="map_tool_right">
+            <div id="map_satellite_button" style="display:none">
+              <label class="map_tab selected sate_tab" id="artboard_tools">绘图工具 <span class="tools"></span>
+	              <div class="artboard_tools_container" id="artboard_tools_container" >
+		             <div class="tools_container_item12 tools_container_item_google" id="playline">折线</div>
+	             	 <div class="tools_container_item12 tools_container_item_baidu J_mouseToolRule" id="playploygon">多边形</div>
+		          </div>
+	          </label>
+              <label class="pano_tab selected" id="displayTileLayer">叠加参考底图
+	            <div id="map_tools_container" class="map_tools_container">
+	              <div class="tools_container_item12 tools_container_item_google" id="googleTileLayer">谷歌地图</div>
+	              <div class="tools_container_item12 tools_container_item_baidu J_mouseToolRule" id="baiduTileLayer">百度地图</div>
+	              <div class="tools_container_item12 tools_container_item_qq J_mouseToolRule" id="qqTileLayer">腾讯地图</div>
+	              <div class="tools_container_item12 tools_container_item_qq J_mouseToolRule" id="imgTileLayer">影像地图</div>
+	              <div class="tools_container_item12 tools_container_item_out selected undisplay" id="displaynoneTileLayer">移除</div>
+	            </div>
+              </label>
+            </div>
+            <div id="map_tool" style="margin-right: 8px;">
+              <div style="border-right: 1px solid #ABCEEC;" id="tools" class="map_tool_item"><span class="text">工具</span>
+                  <span class="tools"></span>
+                <div class="tools_container" id="tools_container">
+                  <div class="tools_container_item tools_container_item_search" id="regionsearch">视野内搜索</div>
+                  <div class="tools_container_item tools_container_item_ranging J_mouseToolRule" >测距</div>
+                  <div class="tools_container_item tools_container_item_marker J_makeMarker">标记</div>
+                </div>
+              </div>
+ 				<span class="tools"></span>
+                <div id="mapFullScreen" class="map_tool_item">	
+              	<span class="not_display">取消</span>全屏
+              </div>
+            </div><!--map_tool-->
+          </div>
+        </div>
+
+        <iframe id="expand_iframe" name="expand_iframe" class="expand_map_iframe" src="expand_iframe"></iframe>
+        <div id='map'></div>
+        <div id="main_right" style="display:none">
+      		<ul class="tab_conbox" id="tab_conbox">
+      			<div id="poiEditForm"></div>
+        		<li class="tab_con">
+        			<div id="result" style="overflow-x:hidden">正在加载。。。</div>
+        		</li>
+        	</ul>
+      	</div>
+        <div id="container"></div>
+      </div>
+    </div>
+   
+  </body>
+  	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.3&key=10abd2e96b77e8755150c8516d1223ee"></script>
+ 	<script type="text/javascript" src="${ctx}/js/common/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="${ctx}/js/common/json2.js"></script>
+	<script type="text/javascript" src="${ctx}/js/common/handlebars-v1.3.0.js"></script>
+	<script type="text/javascript" src="${ctx}/js/common/jquery.nouislider.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/common/amplify.min.js"></script>
+	
+	<!-- 
+	<script type="text/javascript" src="${ctx}/js/common/pointPath.js"></script> 
+	<script type="text/javascript" src="${ctx}/js/map/toolbar.js"></script>
+	<script type="text/javascript" src="${ctx}/js/map/amapDrawTool.js"></script>
+	<script type="text/javascript" src="${ctx}/js/facility/facility.js"></script>
+    <script type="text/javascript" src="${ctx}/js/map/refernceLayer.js"></script>
+	<script type="text/javascript" src="${ctx}/js/map/tabs.js"></script> -->
+	<script type="text/javascript" src="${ctx}/js/common/list.js"></script>
+	<script src="${ctx}/js/common/require.js" data-main="${ctx}/js/main"></script>
+	
+	<!--  <script type="text/javascript" src="${ctx}/js/polygon/savedPolygon.js"></script> -->
+	
+	
+</html>

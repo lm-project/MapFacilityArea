@@ -1,0 +1,22 @@
+<table class="tablesorter" cellspacing="0">
+	<thead>
+		<tr>
+			<th><input type="button" value="全选" id="selectalltask"></th>
+			<th>任务名称</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		{{#each items}}
+		<tr>
+			<td><input type='checkbox' name="taskitemid" value={{taskid}}></td>
+			<td>{{taskname}}</td>
+			<td><input type='image'
+				src='{{../path}}/images/admin/icn_edit.png' id='edit'
+				onclick='edit("{{taskid}}")' title='点击查看作业项'
+				value='{{aid}}'></td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>

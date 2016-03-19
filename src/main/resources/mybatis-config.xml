@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<!-- changes from the defaults -->
+		<setting name="lazyLoadingEnabled" value="true" />
+	</settings>
+    
+    <typeAliases>
+		<typeAlias alias="user" type="com.autonavi.mapart.entity.User" />
+		<typeAlias alias="facilityarea" type="com.autonavi.mapart.entity.Facilityachieve" />
+		<typeAlias alias="task" type="com.autonavi.mapart.entity.Task" />
+		<typeAlias alias="taskitem" type="com.autonavi.mapart.entity.Taskitem" />
+		<typeAlias alias="qaresult" type="com.autonavi.mapart.entity.Qaresult" />
+		<typeAlias alias="qacitynumber" type="com.autonavi.mapart.entity.QACityNumber" />
+		<typeAlias alias="referenceGeom" type="com.autonavi.mapart.entity.ReferenceGeom" />
+		<typeAlias alias="fapoiRelation" type="com.autonavi.mapart.entity.FapoiRelation"/>
+		<typeAlias alias="anf_hicaicaibian" type="com.autonavi.mapart.entity.Anf_hicaicaibian"/>
+		<typeAlias alias="cms_record" type="com.autonavi.mapart.entity.Cms_Record"/>
+	</typeAliases>
+    
+    <mappers>
+    	<mapper resource="mapper/UserMapper.xml"/>
+    	<mapper resource="mapper/TaskitemMapper.xml"/>
+    	<mapper resource="mapper/TaskMapper.xml"/>
+    	<mapper resource="mapper/FacilityachieveMapper.xml"/>
+    	<mapper resource="mapper/QaresultMapper.xml"/>
+    	<mapper resource="mapper/ReferenceGeom.xml"/>
+    	<mapper resource="mapper/FapoiRelationMapper.xml"/>
+    	<mapper resource="mapper/AnShapeMapper.xml"/>
+    	<mapper resource="mapper/Anf_hicaicaibian.xml"/>
+    	<mapper resource="mapper/Cms_Record.xml"/>
+    </mappers>
+</configuration>

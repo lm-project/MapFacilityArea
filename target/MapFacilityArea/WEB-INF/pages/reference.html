@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head data-gwd-animation-mode="quickMode">
+	<title>设施区域在线制作平台</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+	<#assign ctx=(rc.getContextPath())!''>
+	<script type="text/javascript" src="${ctx}/js/common/jquery-1.9.1.js"></script>
+	<!-- <script type="text/javascript">var path = '${ctx}';</script> -->
+ 	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=A9AGCgtSHywDDpcy1qM4vhGC"></script>
+	<!-- <script type="text/javascript" src="${ctx}/js/map/bdGeoUtils.js"></script>
+  	<script type="text/javascript">
+  
+    
+  	 var getContextData = function(data){
+  		var tl = eval(data.restring); 
+		console.log(tl.length);
+		var instr = "";
+		var keyStr ="";
+		for (var i=0 ; i< tl.length; i++) {
+			var rstr = "INSERT INTO reference_geom ( type, key, geom, context) VALUES ( 'baidu', '"+tl[i].key+"', NULL,'";
+			var c = tl[i].context.toString();
+			var context = c.split(",");
+			for(var  j = 0 ; j < context.length-1 ; j=j+2 ){
+				//console.log(context[j]+","+context[j+1]);
+				var str = geotoMct(context[j], context[j+1])
+				rstr  += str;
+				instr += str;
+			}
+			rstr = rstr.substr(0, rstr.length-1);
+			rstr += "');\r\n";
+			$('#mainTop').append(rstr);
+			instr += ";";
+			keyStr+=tl[i].key+",";
+			console.log(":"+instr);
+		}
+		keyStr=keyStr.substr(0,keyStr.length-1);
+		insertDataToDB(instr,keyStr);
+  	 }
+  	 var  insertDataToDB = function(geomArr,keyArr){
+  		var path = '${ctx}';
+  		$.ajax({
+			type : "POST",
+			url : path+"/operator/insert_reference_geom",
+			data : "geom="+geomArr+ "&key=" + keyArr
+		});
+  	 }
+  	$(function(){
+  		var path = '${ctx}';
+		$.ajax({
+			type : "GET",
+			url : path+"/operator/reference_geom",
+			success : function(data){
+				if(data.code == '100') {
+					getContextData(data);
+				}
+			}
+		});	 
+	});
+</script> -->
+  </head>
+  <body  width="100%">
+    <div id="mainTop"></div>
+    <div id="container"></div>
+  </body>
+</html>

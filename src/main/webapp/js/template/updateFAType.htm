@@ -1,0 +1,41 @@
+<div id="tab_container">
+	<h4 class="alert_info">欢迎维护设施区域类别(FA_TYPE)</h4>
+	<article class="module width_full">
+		<div class="module_content">
+			<fieldset style="width: 100%; float: left">
+				<div style="height: 30xp; margin: 13px">
+					<span style="color: #1F1F20; font-size: 13px; float: left">设施区域大类:</span>
+					<select style="width: 202px; float: left" id='facategory'>
+						<option value=0>全部</option>
+					</select>
+				</div>
+				<div class="clear"></div>
+				<div style="height: 30xp; margin: 13px">
+					<span style="color: #1F1F20; font-size: 13px; float: left">设施区域中类:</span>
+					<select style="width: 202px; float: left" id='fatype'>
+						<option value=0>全部</option>
+					</select> <span style="color: #1F1F20; font-size: 13px; float: left">POI类型:</span>
+					<select style="width: 202px; float: left" id='poitype'>
+						<option value=0>全部</option>
+					</select>
+				</div>
+				<div class="clear"></div>
+				<div style="height: 30xp; margin: 13px; padding-left: 20px">
+					<span>找到<font style="color: red" id='fatype_number'></font>条数据
+					</span><input type="button" value="点击查询" class="alt_btn"
+						style="margin-left: 80px" id="query_fatype">
+					<!-- <input type="button" value="点击新增" class="alt_btn"
+						style="margin-left: 80px" id="add_fatype"> -->
+				</div>
+			</fieldset>
+			<div class="clear"></div>
+			<div class="tab_container" id="tab_container1">
+				<div id="fatype_tab" class="tab_content" style="overflow: auto; max-height: 335px">
+				<!-- content of fatype_tab -->
+				</div>
+			</div>
+		</div>
+	</article>
+</div>
+<!-- end of post new article -->
+<div class="spacer"></div>

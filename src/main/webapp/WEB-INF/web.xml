@@ -1,0 +1,96 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath*:service-context.xml,classpath*:spring-security.xml</param-value>
+	</context-param>
+
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+
+	<!-- Spring Secutiry3.1.0的过滤器链配置 -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+
+
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener </listener-class>
+	</listener>
+
+	<!-- Spring刷新Interceptor防止内存泄漏 -->
+	<listener>
+		<listener-class>
+			org.springframework.web.util.IntrospectorCleanupListener
+		</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>MapFacilityArea</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath*:servlet-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>MapFacilityArea</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 设置session 超时时间为20分钟 -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+
+	<welcome-file-list>
+		<welcome-file>/index</welcome-file>
+	</welcome-file-list>
+	<error-page>  
+        <error-code>404</error-code>  
+        <location>/404</location>  
+    </error-page>  
+	<!-- <security-constraint>
+		<web-resource-collection>
+			<web-resource-name>securedapp</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint> -->
+    
+</web-app>
